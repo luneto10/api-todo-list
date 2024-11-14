@@ -10,6 +10,23 @@ builder.Services.Configure<MongoDBSettings>(builder.Configuration.GetSection("Mo
 builder.Services.AddSingleton<MongoDBServices>();
 
 builder.Services.AddControllers();
+
+// Add CORS policy allowing specific origins
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:5173",                          // Development environment (Vite default URL)
+            "https://minimalist-todo-list-weld.vercel.app"    // Production environment on Vercel
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
+
+
 // Swagger configuration
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +42,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Apply CORS policy before authorization
+app.UseCors("AllowFrontend");
 app.UseAuthorization();
 
 app.MapControllers();

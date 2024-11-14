@@ -42,16 +42,17 @@ public class TaskController : Controller
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] TaskModel task)
     {
-        
-        await _mongoDbServices.CreateAsync(task);
-
-        if (task.Id == null)
+        if (string.IsNullOrEmpty(task.CreatedAt))
         {
-            return BadRequest("Task Id cannot be null after creation.");
+            task.CreatedAt = DateTime.UtcNow.ToString("o");
         }
+
+        await _mongoDbServices.CreateAsync(task);
+        
 
         return CreatedAtAction(nameof(Get), new { id = task.Id }, task);
     }
+
 
 
     [HttpPut("{id}")]

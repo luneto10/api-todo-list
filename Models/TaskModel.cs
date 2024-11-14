@@ -1,18 +1,20 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace TodoListAPI.Models;
-
-public class TaskModel
+namespace TodoListAPI.Models
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
-    
-    public string Text { get; set; }
-    
-    public bool Completed { get; set; }
-
-    public string Url { get; set; }
-    
+    public class TaskModel
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
+        
+        public string Text { get; set; }
+        
+        public bool Completed { get; set; }
+        
+        public string Url { get; set; }
+        
+        public string CreatedAt { get; set; } = DateTime.UtcNow.ToString("o");
+    }
 }

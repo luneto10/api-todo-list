@@ -72,15 +72,19 @@ public class MongoDBServices
     }
     
     public async Task<List<TaskModel>> GetByUrl(string url)
-    
     {
         if (string.IsNullOrWhiteSpace(url))
         {
             throw new ArgumentException("URL cannot be null or empty", nameof(url));
         }
-        
-        FilterDefinition<TaskModel> filter = Builders<TaskModel>.Filter.Eq(t => t.Url, url);
+
+        Console.WriteLine($"Searching for tasks with URL: {url}");
+
+        FilterDefinition<TaskModel> filter = Builders<TaskModel>.Filter.Regex(t => t.Url, url);
         List<TaskModel> tasks = await _todosCollection.Find(filter).ToListAsync();
+
+        Console.WriteLine($"Tasks found: {tasks.Count}");
+    
         return tasks;
     }
         
